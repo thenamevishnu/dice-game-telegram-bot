@@ -1,0 +1,16 @@
+{
+    "name": "dice-game",
+    "version": "1.0.0",
+    "description": "",
+    "license": "ISC",
+    "author": "",
+    "type": "module",
+    "main": "app.mjs",
+    "scripts": {
+        "start": "nodemon app.mjs"
+    },
+    "dependencies": {
+        "node-telegram-bot-api": "^0.66.0",
+        "nodemon": "^3.1.10"
+    }
+}
