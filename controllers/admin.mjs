@@ -4,6 +4,7 @@ import { admin_wait_for, keys, userMention } from "../lib/telegram.mjs";
 
 api.onText(/^\/admin$|^👨‍💻 Admin Panel$|^🔙 Admin$/, async msg => {
     try {
+        if (msg.chat.type != "private") return;
         const id = msg.from.id
         if (id != settings.admin.id) return
         admin_wait_for[id] = ""
@@ -22,6 +23,7 @@ api.onText(/^\/admin$|^👨‍💻 Admin Panel$|^🔙 Admin$/, async msg => {
 
 api.onText(/^\/user_info$|^ℹ️ User Info$/, async (msg) => {
     try {
+        if (msg.chat.type != "private") return;
         if (msg.from.id != settings.admin.id) return;
         admin_wait_for[msg.from.id] = "user_info";
         return await api.sendMessage(msg.from.id, "<b> 👤 Enter the user ID:</b>", {
@@ -40,6 +42,7 @@ api.onText(/^\/user_info$|^ℹ️ User Info$/, async (msg) => {
    
 api.onText(/^\/update_balance$|^🔄 Update Balance$/, async (msg) => {
     try {
+        if (msg.chat.type != "private") return;
         if (msg.from.id != settings.admin.id) return;
         admin_wait_for[msg.from.id] = "update_balance_user_id";
         return await api.sendMessage(msg.from.id, "<b>🔄 Enter the user ID to update balance:</b>", {
@@ -58,6 +61,7 @@ api.onText(/^\/update_balance$|^🔄 Update Balance$/, async (msg) => {
 
 api.onText(/^\/ban$|^🔴 Ban$/, async (msg) => {
     try {
+        if (msg.chat.type != "private") return;
         if (msg.from.id != settings.admin.id) return;
         admin_wait_for[msg.from.id] = "ban_user_id";
         return await api.sendMessage(msg.from.id, "<b>🔴 Enter the user ID to ban:</b>", {
@@ -76,6 +80,7 @@ api.onText(/^\/ban$|^🔴 Ban$/, async (msg) => {
 
 api.onText(/^\/unban$|^🟢 Unban$/, async (msg) => {
     try {
+        if (msg.chat.type != "private") return;
         if (msg.from.id != settings.admin.id) return;
         admin_wait_for[msg.from.id] = "unban_user_id";
         return await api.sendMessage(msg.from.id, "<b>🟢 Enter the user ID to unban:</b>", {
@@ -94,6 +99,7 @@ api.onText(/^\/unban$|^🟢 Unban$/, async (msg) => {
 
 api.onText(/^\/broadcast$|^💬 Broadcast$/, async (msg) => {
     try {
+        if (msg.chat.type != "private") return;
         if (msg.from.id != settings.admin.id) return;
         admin_wait_for[msg.from.id] = "broadcast_message";
         return await api.sendMessage(msg.from.id, "<b>💬 Create or forward message to broadcast:</b>", {

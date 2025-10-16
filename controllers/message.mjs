@@ -5,6 +5,8 @@ import { admin_wait_for, key_map, keys, storage, userMention, wait_for_answer } 
 import { UserModel } from "../models/user.model.mjs";
 
 api.on("message", async (msg) => {
+    
+    if (msg.chat.type != "private") return;
     if (key_map.includes(msg?.text)) return;
 
     if (!storage[msg.from.id]) {

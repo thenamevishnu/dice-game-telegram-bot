@@ -5,6 +5,7 @@ import { UserModel } from "../models/user.model.mjs";
 
 api.onText(/^\/start(?:\s+(.+))?$|^🔙 Back$/, async (msg, match) => {
     try {
+        if (msg.chat.type != "private") return;
         wait_for_answer[msg.from.id] = "";
         let inviter = match?.[1] ? match[1].split(/\s+/)[0] : null;
         const user = await UserModel.findOne({ _id: msg.from.id });
@@ -56,6 +57,7 @@ api.onText(/^\/start(?:\s+(.+))?$|^🔙 Back$/, async (msg, match) => {
 
 api.onText(/^\/balance$|^💰 Balance$/, async (msg) => {
     try {
+        if (msg.chat.type != "private") return;
         const user = await UserModel.findOne({ _id: msg.from.id });
         await api.sendMessage(
             msg.from.id,
@@ -71,6 +73,7 @@ api.onText(/^\/balance$|^💰 Balance$/, async (msg) => {
 
 api.onText(/^\/invite$|^📨 Invite$/, async (msg) => {
     try {
+        if (msg.chat.type != "private") return;
         const user = await UserModel.findOne({ _id: msg.from.id });
         const referralLink = `https://t.me/${settings.bot.username}?start=${msg.from.id}`;
         await api.sendMessage(
@@ -87,6 +90,7 @@ api.onText(/^\/invite$|^📨 Invite$/, async (msg) => {
 
 api.onText(/^\/roll_dice$|^🎲 Roll Dice$/, async (msg) => {
     try {
+        if (msg.chat.type != "private") return;
         wait_for_answer[msg.from.id] = "roll_dice_amount";
         return await api.sendMessage(msg.from.id, "<b>💸 Enter the amount to roll:</b>", {
             parse_mode: "HTML",
@@ -102,7 +106,11 @@ api.onText(/^\/roll_dice$|^🎲 Roll Dice$/, async (msg) => {
     }
 });
 
-api.onText(/^\/leaderboard$|^🏆 Leaderboard$/, async (msg) => {
+api.onText(/^\/top_list$|^🏆 Top List$/, async (msg) => {
+    const obj = {
+        parse_mode: "HTML"
+    }
+    if (msg.chat.type != "private") obj.reply_to_message_id = msg.message_id
     try {
         const topUsers = await UserModel.find({})
             .sort({ "balance.gain": -1 })
@@ -112,10 +120,8 @@ api.onText(/^\/leaderboard$|^🏆 Leaderboard$/, async (msg) => {
 
         if (!topUsers.length) {
             return await api.sendMessage(
-                msg.from.id,
-                "<b>🏆 No data for leaderboard yet.</b>",
-                { parse_mode: "HTML" }
-            );
+                msg.chat.id,
+                "<b>🏆 No data for leaderboard yet.</b>", obj);
         }
 
         let text = "<b>🏆 Top 10 Players by Gain:</b>\n\n";
@@ -126,16 +132,15 @@ api.onText(/^\/leaderboard$|^🏆 Leaderboard$/, async (msg) => {
             text += `${idx + 1}. ${mention} ${user._id == msg.from.id ? "<b>(You)</b>" : ""} — <b>${parseFloat(user.balance?.gain || 0).toFixed(2)} USDT</b>\n`;
         });
 
-        return await api.sendMessage(msg.from.id, text, { parse_mode: "HTML" });
+        return await api.sendMessage(msg.chat.id, text, obj);
     } catch (error) {
-        return await api.sendMessage(msg.from.id, "⚠️ <b>Error: Please try again.</b>", {
-            parse_mode: "HTML"
-        })
+        return await api.sendMessage(msg.chat.id, "⚠️ <b>Error: Please try again.</b>", obj)
     }
 });
 
 api.onText(/^\/settings$|^⚙️ Settings$/, async (msg) => {
     try {
+        if (msg.chat.type != "private") return;
         const user = await UserModel.findOne({ _id: msg.from.id });
         await api.sendMessage(
             msg.from.id,
@@ -158,6 +163,7 @@ api.onText(/^\/settings$|^⚙️ Settings$/, async (msg) => {
 
 api.onText(/^\/deposit$|^💵 Add Funds$/, async (msg) => {
     try {
+        if (msg.chat.type != "private") return;
         wait_for_answer[msg.from.id] = "deposit_amount";
         return await api.sendMessage(msg.from.id, "<b>💸 Enter the amount to add funds in USD:</b>", {
             parse_mode: "HTML",
@@ -175,11 +181,12 @@ api.onText(/^\/deposit$|^💵 Add Funds$/, async (msg) => {
 
 api.onText(/\/id$/, async (msg) => {
     try {
-        return await api.sendMessage(msg.from.id, `<b>🆔 Your ID: <code>${msg.from.id}</code></b>`, {
-            parse_mode: "HTML"
+        return await api.sendMessage(msg.chat.id, `<b>🆔 Your ID: <code>${msg.from.id}</code></b>`, {
+            parse_mode: "HTML",
+            reply_to_message_id: msg.message_id
         });
     } catch (error) {
-        return await api.sendMessage(msg.from.id, "⚠️ <b>Error: Please try again.</b>", {
+        return await api.sendMessage(msg.chat.id, "⚠️ <b>Error: Please try again.</b>", {
             parse_mode: "HTML"
         })
     }
@@ -187,6 +194,7 @@ api.onText(/\/id$/, async (msg) => {
 
 api.onText(/\/withdraw$|^💸 Withdraw$/, async (msg) => {
     try {
+        if (msg.chat.type != "private") return;
         const user = await UserModel.findOne({ _id: msg.from.id });
         if(user.is_banned) {
             return await api.sendMessage(msg.from.id, "⚠️ <b>You are banned. So you can't withdraw. Please contact the admin for more information.</b>", {
@@ -220,6 +228,7 @@ api.onText(/\/withdraw$|^💸 Withdraw$/, async (msg) => {
 
 api.onText(/^\/statistics$|^📊 Statistics$/, async (msg) => {
     try {
+        if (msg.chat.type != "private") return;
         const response = await UserModel.aggregate([
             {
                 $group: {
