@@ -218,3 +218,35 @@ api.onText(/\/withdraw$|^💸 Withdraw$/, async (msg) => {
     }
 });
 
+api.onText(/^\/statistics$|^📊 Statistics$/, async (msg) => {
+    try {
+        const response = await UserModel.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    total_users: { $count:{} },
+                    total_winnings: { $sum: "$balance.winnings" },
+                    total_losses: { $sum: "$balance.losses" },
+                    total_gain: { $sum: "$balance.gain" },
+                    total_referral: { $sum: "$balance.referral" },
+                    total_payout: { $sum: "$balance.payout" },
+                    total_deposit: { $sum: "$balance.deposit" }
+                }
+            }
+        ]);
+        const text = `<b>📊 Statistics</b>\n\n<b>👥 Total Users:</b> <code>${response[0].total_users}</code>\n\n<b>💰 Total Deposit:</b> <code>${parseFloat(response[0].total_deposit).toFixed(2)} USDT</code>\n<b>💰 Total Winnings:</b> <code>${parseFloat(response[0].total_winnings).toFixed(2)} USDT</code>\n\n<b>🔻 Total Losses:</b> <code>${parseFloat(response[0].total_losses).toFixed(2)} USDT</code>\n<b>📈 Total Gain:</b> <code>${parseFloat(response[0].total_gain).toFixed(2)} USDT</code>\n\n<b>🔗 Total Referral:</b> <code>${parseFloat(response[0].total_referral).toFixed(2)} USDT</code>\n\n<b>💵 Total Payout:</b> <code>${parseFloat(response[0].total_payout).toFixed(2)} USDT</code>\n\n<b>⌚ D&T:</b> <code>${new Date().toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        }).toUpperCase()}</code>`;
+        return await api.sendMessage(msg.from.id, text, { parse_mode: "HTML" });
+    } catch (error) {
+        return await api.sendMessage(msg.from.id, "⚠️ <b>Error: Please try again.</b>", {
+            parse_mode: "HTML"
+        })
+    }
+});
+
