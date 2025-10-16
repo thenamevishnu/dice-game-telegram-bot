@@ -10,6 +10,7 @@ const router = Router();
 
 router.post("/callback", async (request, response) => {
     const { body: postData } = request
+    console.log(postData)
     const apiSecret = (postData.type === "invoice" || postData.type === "payment") ? process.env.OXAPAY_MERCHANT : process.env.OXAPAY_PAYOUT
     const hmacHeader = request.headers["hmac"]
     const calculatedHmac = crypto.createHmac("sha256", apiSecret).update(JSON.stringify(postData)).digest("hex")
