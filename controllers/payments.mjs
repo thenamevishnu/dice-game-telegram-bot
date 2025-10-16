@@ -19,7 +19,7 @@ router.post("/callback", async (request, response) => {
         })
     }
     const payer_id = postData.description
-    if (postData.type == "invoice") {
+    if (postData.type == "invoice" || postData.type == "payment") {
         const payment = await PaymentModel.findOne({ track_id: postData.track_id });
         if (!payment) {
             await PaymentModel.create(postData);
