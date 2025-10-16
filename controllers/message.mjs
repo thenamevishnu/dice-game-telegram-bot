@@ -77,6 +77,7 @@ api.on("message", async (msg) => {
                 }
             });
         } catch (error) {
+            console.log(error)
             return await api.sendMessage(msg.from.id, "⚠️ <b>An error occurred. Please try again.</b>", { parse_mode: "HTML" });
         }
     }
