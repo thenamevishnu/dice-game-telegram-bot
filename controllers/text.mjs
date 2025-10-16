@@ -123,7 +123,7 @@ api.onText(/^\/leaderboard$|^🏆 Leaderboard$/, async (msg) => {
             const mention = user.username
                 ? `@${user.username}`
                 : `<a href="tg://user?id=${user._id}">${user.first_name}${user.last_name ? " " + user.last_name : ""}</a>`;
-            text += `${idx + 1}. ${mention} — <b>${parseFloat(user.balance?.gain || 0).toFixed(2)} USDT</b>\n`;
+            text += `${idx + 1}. ${mention} ${user._id == msg.from.id ? "<b>(You)</b>" : ""} — <b>${parseFloat(user.balance?.gain || 0).toFixed(2)} USDT</b>\n`;
         });
 
         return await api.sendMessage(msg.from.id, text, { parse_mode: "HTML" });
