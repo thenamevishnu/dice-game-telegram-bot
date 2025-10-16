@@ -190,9 +190,9 @@ api.on("message", async (msg) => {
 
 
     // Admin Side
-    const admin_wait_for = admin_wait_for[msg.from.id];
+    const admin_wait_for_answer = admin_wait_for[msg.from.id];
 
-    if (admin_wait_for == "user_info") {
+    if (admin_wait_for_answer == "user_info") {
         try {
             if (msg.from.id != settings.admin.id) return;
             if (!msg?.text) {
@@ -253,7 +253,7 @@ api.on("message", async (msg) => {
         }
     }
 
-    if (admin_wait_for == "update_balance_user_id") {
+    if (admin_wait_for_answer == "update_balance_user_id") {
         try {
             if (msg.from.id != settings.admin.id) return;
             if(!msg?.text) {
@@ -304,7 +304,7 @@ api.on("message", async (msg) => {
         }
     } 
 
-    if (admin_wait_for == "update_balance") {
+    if (admin_wait_for_answer == "update_balance") {
         try {
             if (msg.from.id != settings.admin.id) return;
             const {key: type, user_id} = storage[msg.from.id];
@@ -334,7 +334,7 @@ api.on("message", async (msg) => {
         }
     }
 
-     if (admin_wait_for == "ban_user_id") {
+     if (admin_wait_for_answer == "ban_user_id") {
         try {
             if (msg.from.id != settings.admin.id) return;
             if(!msg?.text) {
@@ -361,7 +361,7 @@ api.on("message", async (msg) => {
         }
     }
 
-     if (admin_wait_for == "unban_user_id") {
+     if (admin_wait_for_answer == "unban_user_id") {
         try {
             if (msg.from.id != settings.admin.id) return;
             if(!msg?.text) {
@@ -388,7 +388,7 @@ api.on("message", async (msg) => {
         }
     }
 
-    if (admin_wait_for == "broadcast_message") {
+    if (admin_wait_for_answer == "broadcast_message") {
         try {
             if (msg.from.id != settings.admin.id) return;
             const broadcast_id = msg.message_id
