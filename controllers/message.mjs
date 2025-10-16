@@ -190,9 +190,11 @@ api.on("message", async (msg) => {
 
 
     // Admin Side
+    const admin_wait_for = admin_wait_for[msg.from.id];
 
-    if (admin_wait_for[msg.from.id] == "user_info") {
+    if (admin_wait_for == "user_info") {
         try {
+            if (msg.from.id != settings.admin.id) return;
             if (!msg?.text) {
                 return await api.sendMessage(msg.from.id, "⚠️ <b>Please enter a valid user ID.</b>", { parse_mode: "HTML" });
             }
@@ -251,8 +253,9 @@ api.on("message", async (msg) => {
         }
     }
 
-    if(admin_wait_for[msg.from.id] == "update_balance_user_id") {
+    if (admin_wait_for == "update_balance_user_id") {
         try {
+            if (msg.from.id != settings.admin.id) return;
             if(!msg?.text) {
                 return await api.sendMessage(msg.from.id, "⚠️ <b>Please enter a valid user ID.</b>", { parse_mode: "HTML" });
             }
@@ -301,8 +304,9 @@ api.on("message", async (msg) => {
         }
     } 
 
-    if(admin_wait_for[msg.from.id] == "update_balance") {
+    if (admin_wait_for == "update_balance") {
         try {
+            if (msg.from.id != settings.admin.id) return;
             const {key: type, user_id} = storage[msg.from.id];
             if(!user_id) {
                 return await api.sendMessage(msg.from.id, "⚠️ <b>Please enter a valid user ID.</b>", { parse_mode: "HTML" });
@@ -330,8 +334,9 @@ api.on("message", async (msg) => {
         }
     }
 
-     if(admin_wait_for[msg.from.id] == "ban_user_id") {
+     if (admin_wait_for == "ban_user_id") {
         try {
+            if (msg.from.id != settings.admin.id) return;
             if(!msg?.text) {
                 return await api.sendMessage(msg.from.id, "⚠️ <b>Please enter a valid user ID.</b>", { parse_mode: "HTML" });
             }
@@ -356,8 +361,9 @@ api.on("message", async (msg) => {
         }
     }
 
-     if(admin_wait_for[msg.from.id] == "unban_user_id") {
+     if (admin_wait_for == "unban_user_id") {
         try {
+            if (msg.from.id != settings.admin.id) return;
             if(!msg?.text) {
                 return await api.sendMessage(msg.from.id, "⚠️ <b>Please enter a valid user ID.</b>", { parse_mode: "HTML" });
             }
@@ -382,8 +388,9 @@ api.on("message", async (msg) => {
         }
     }
 
-    if(admin_wait_for[msg.from.id] == "broadcast_message") {
+    if (admin_wait_for == "broadcast_message") {
         try {
+            if (msg.from.id != settings.admin.id) return;
             const broadcast_id = msg.message_id
             storage[msg.from.id]["broadcast_id"] = broadcast_id
             await api.copyMessage(msg.from.id, msg.from.id, broadcast_id);
