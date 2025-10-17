@@ -235,7 +235,7 @@ api.onText(/^\/statistics$|^📊 Statistics$/, async (msg) => {
                     _id: null,
                     total_users: { $count:{} },
                     total_winnings: { $sum: "$balance.winnings" },
-                    total_losses: { $sum: "$balance.losses" },
+                    total_losses: { $sum: "$balance.loss" },
                     total_gain: { $sum: "$balance.gain" },
                     total_referral: { $sum: "$balance.referral" },
                     total_payout: { $sum: "$balance.payout" },
